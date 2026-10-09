@@ -3,6 +3,7 @@ import { getLocale } from "@i18n/locale";
 import { Icon } from "astro-icon/components";
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
+import { categoryLabel, categorySegments } from "../utils/category-utils";
 import { formatDateToYYYYMMDD } from "../utils/date-utils";
 import { getCategoryUrl, getTagUrl } from "../utils/url-utils";
 
@@ -25,6 +26,7 @@ const {
 } = Astro.props;
 const className = Astro.props.class;
 const locale = getLocale(Astro.url.pathname);
+const categoryParts = categorySegments(category);
 ---
 
 <div class:list={["flex flex-wrap text-neutral-500 dark:text-neutral-400 items-center gap-4 gap-x-4 gap-y-2", className]}>
@@ -54,12 +56,20 @@ const locale = getLocale(Astro.url.pathname);
         >
             <Icon name="material-symbols:book-2-outline-rounded" class="text-xl"></Icon>
         </div>
-        <div class="flex flex-row flex-nowrap items-center">
-            <a href={getCategoryUrl(category, locale)} aria-label={`View all posts in the ${category} category`}
+        <div class="flex flex-row flex-wrap items-center gap-1">
+            {categoryParts.length > 0 ? categoryParts.map((part, index) => (
+                <>
+                    {index > 0 && <span class="text-30" aria-hidden="true">›</span>}
+                    <a href={getCategoryUrl(categoryParts.slice(0, index + 1).join("/"), locale)}
+                        class="link-lg transition text-50 text-sm font-medium hover:text-[var(--primary)]">
+                        {categoryLabel(part)}
+                    </a>
+                </>
+            )) : <a href={getCategoryUrl(category, locale)} aria-label={`View all posts in the ${category} category`}
                class="link-lg transition text-50 text-sm font-medium
                             hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap">
                 {category || i18n(I18nKey.uncategorized, locale)}
-            </a>
+            </a>}
         </div>
     </div>
 
