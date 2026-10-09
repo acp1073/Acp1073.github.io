@@ -1,0 +1,6 @@
+---
+import Home, { getStaticPaths as getHomePaths } from "../[...page].astro";
+
+export const getStaticPaths = getHomePaths;
+---
+<Home {...Astro.props} />

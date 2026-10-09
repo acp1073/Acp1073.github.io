@@ -1,0 +1,35 @@
+---
+import { Icon } from "astro-icon/components";
+import { getLocale } from "../i18n/locale";
+import { localizedUrl } from "../utils/url-utils";
+
+const locale = getLocale(Astro.url.pathname);
+const target = locale === "en" ? "zh_CN" : "en";
+---
+<a id="language-switch" href={localizedUrl(Astro.url.pathname, target)}
+   data-no-swup hreflang={target === "en" ? "en" : "zh-CN"}
+   aria-label={locale === "en" ? "切换到中文" : "Switch to English"}
+   title={locale === "en" ? "切换到中文" : "Switch to English"}
+   class="btn-plain scale-animation rounded-lg h-11 px-2 md:px-3 gap-1.5 font-bold text-sm shrink-0 active:scale-95">
+    <Icon name="material-symbols:translate" class="text-[1.25rem]" />
+    <span>{locale === "en" ? "中文" : "EN"}</span>
+</a>
+
+<script>
+import { getLocale } from "../i18n/locale";
+import { localizedUrl } from "../utils/url-utils";
+
+function updateLanguageLink() {
+	const link = document.querySelector<HTMLAnchorElement>("#language-switch");
+	if (!link) return;
+	const current = window.location;
+	const target = getLocale(current.pathname) === "en" ? "zh_CN" : "en";
+	link.href = localizedUrl(`${current.pathname}${current.search}${current.hash}`, target);
+}
+
+updateLanguageLink();
+document.getElementById("language-switch")?.addEventListener("click", updateLanguageLink);
+const setup = () => window.swup.hooks.on("page:view", updateLanguageLink);
+if (window.swup) setup();
+else document.addEventListener("swup:enable", setup, { once: true });
+</script>

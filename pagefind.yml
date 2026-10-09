@@ -4,3 +4,7 @@ exclude_selectors:
   - "[data-pagefind-ignore]"
   - ".search-panel"
   - "#search-panel"
+
+# Both interfaces share the original articles. Use Chinese segmentation in one
+# shared index so Chinese and English queries work from either interface.
+force_language: zh

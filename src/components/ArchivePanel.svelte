@@ -1,4 +1,5 @@
 <script lang="ts">
+import type { SupportedLocale } from "@i18n/locale";
 import { onMount } from "svelte";
 
 import I18nKey from "../i18n/i18nKey";
@@ -19,6 +20,8 @@ interface Group {
 	year: number;
 	posts: Post[];
 }
+
+export let locale: SupportedLocale = "zh_CN";
 
 let groups: Group[] = [];
 
@@ -90,13 +93,13 @@ onMount(async () => {
                     ></div>
                 </div>
                 <div class="w-[70%] md:w-[80%] transition text-left text-50">
-                    {group.posts.length} {i18n(group.posts.length === 1 ? I18nKey.postCount : I18nKey.postsCount)}
+                    {group.posts.length} {i18n(group.posts.length === 1 ? I18nKey.postCount : I18nKey.postsCount, locale)}
                 </div>
             </div>
 
             {#each group.posts as post}
                 <a
-                        href={getPostUrlBySlug(post.slug)}
+                        href={getPostUrlBySlug(post.slug, locale)}
                         aria-label={post.data.title}
                         class="group btn-plain !block h-10 w-full rounded-lg hover:text-[initial]"
                 >

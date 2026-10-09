@@ -1,0 +1,8 @@
+---
+import Post, {
+	getStaticPaths as getPostPaths,
+} from "../../posts/[...slug].astro";
+
+export const getStaticPaths = getPostPaths;
+---
+<Post {...Astro.props} />
