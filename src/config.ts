@@ -55,7 +55,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "https://avatars.githubusercontent.com/u/236999078?v=4",
 	name: "ACP1073",
-	bio: "记录学习、技术与生活",
+	bio: "试问岭南应不好，却道，此心安处是吾乡",
 	links: [
 		{
 			name: "GitHub",
