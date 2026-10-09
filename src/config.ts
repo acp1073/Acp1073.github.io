@@ -62,6 +62,16 @@ export const profileConfig: ProfileConfig = {
 			icon: "fa6-brands:github",
 			url: "https://github.com/acp1073",
 		},
+		{
+			name: "知乎",
+			icon: "fa6-brands:zhihu",
+			url: "https://www.zhihu.com/people/woow-58-83",
+		},
+		{
+			name: "B站",
+			icon: "fa6-brands:bilibili",
+			url: "https://space.bilibili.com/505624127",
+		},
 	],
 };
 

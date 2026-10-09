@@ -6,7 +6,7 @@
 
 我会在这里整理笔记、分享实践经验，以及记录值得留下的想法。
 
-你可以在 [GitHub](https://github.com/acp1073) 找到我。
+你可以在 [GitHub](https://github.com/acp1073)、[知乎](https://www.zhihu.com/people/woow-58-83) 和 [B站](https://space.bilibili.com/505624127) 找到我。
 
 ## 关于本站
 
