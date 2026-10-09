@@ -29,6 +29,11 @@ export default defineConfig({
 	site: "https://acp1073.github.io/",
 	base: "/",
 	trailingSlash: "always",
+	i18n: {
+		defaultLocale: "zh",
+		locales: ["zh", "en"],
+		routing: { prefixDefaultLocale: false },
+	},
 	integrations: [
 		tailwind({
 			nesting: true,
