@@ -3,6 +3,7 @@ import I18nKey from "@i18n/i18nKey";
 import type { SupportedLocale } from "@i18n/locale";
 import { i18n } from "@i18n/translation";
 import { getCategoryUrl } from "@utils/url-utils.ts";
+import { buildCategoryTree, type CategoryNode } from "./category-utils";
 
 // // Retrieve posts and sort them by publication date
 async function getRawSortedPosts() {
@@ -114,4 +115,13 @@ export async function getCategoryList(
 		});
 	}
 	return ret;
+}
+
+export async function getCategoryTree(
+	locale: SupportedLocale = "zh_CN",
+): Promise<CategoryNode[]> {
+	return buildCategoryTree(
+		await getSortedPostsList(),
+		i18n(I18nKey.uncategorized, locale),
+	);
 }

@@ -1,11 +1,17 @@
 <script lang="ts">
 import type { SupportedLocale } from "@i18n/locale";
 import { onMount } from "svelte";
-
 import I18nKey from "../i18n/i18nKey";
 import { i18n } from "../i18n/translation";
+import {
+	buildCategoryTree,
+	type CategoryNode,
+	categorySegments,
+	matchesCategory,
+} from "../utils/category-utils";
 import type { PostForList as Post } from "../utils/content-utils";
 import { getPostUrlBySlug } from "../utils/url-utils";
+import CategoryArchiveBranch from "./CategoryArchiveBranch.svelte";
 
 export let tags: string[] = [];
 export let categories: string[] = [];
@@ -24,6 +30,9 @@ interface Group {
 export let locale: SupportedLocale = "zh_CN";
 
 let groups: Group[] = [];
+let categoryTree: CategoryNode[] = [];
+let view: "categories" | "time" = "categories";
+let postCount = 0;
 
 function formatDate(date: Date) {
 	const month = (date.getMonth() + 1).toString().padStart(2, "0");
@@ -47,13 +56,17 @@ onMount(async () => {
 	}
 
 	if (categories.length > 0) {
-		filteredPosts = filteredPosts.filter(
-			(post) => post.data.category && categories.includes(post.data.category),
+		filteredPosts = filteredPosts.filter((post) =>
+			categories.some((category) =>
+				matchesCategory(post.data.category, category),
+			),
 		);
 	}
 
 	if (uncategorized) {
-		filteredPosts = filteredPosts.filter((post) => !post.data.category);
+		filteredPosts = filteredPosts.filter(
+			(post) => categorySegments(post.data.category).length === 0,
+		);
 	}
 
 	const grouped = filteredPosts.reduce(
@@ -76,10 +89,28 @@ onMount(async () => {
 	groupedPostsArray.sort((a, b) => b.year - a.year);
 
 	groups = groupedPostsArray;
+	postCount = filteredPosts.length;
+	categoryTree = buildCategoryTree(
+		filteredPosts,
+		i18n(I18nKey.uncategorized, locale),
+	);
 });
 </script>
 
 <div class="card-base px-8 py-6">
+    <div class="mb-5 flex flex-wrap items-center gap-2" role="group" aria-label={locale === "en" ? "Archive view" : "归档视图"}>
+        <button class="btn-plain rounded-lg px-4 py-2" class:active={view === "categories"} aria-pressed={view === "categories"} on:click={() => view = "categories"}>{locale === "en" ? "By category" : "按分类"}</button>
+        <button class="btn-plain rounded-lg px-4 py-2" class:active={view === "time"} aria-pressed={view === "time"} on:click={() => view = "time"}>{locale === "en" ? "By date" : "按时间"}</button>
+    </div>
+    {#if postCount === 0}
+        <p class="py-8 text-center text-50">{locale === "en" ? "No posts found." : "暂无文章"}</p>
+    {:else if view === "categories"}
+        <div data-category-archive>
+            {#each categoryTree as node (node.path)}
+                <CategoryArchiveBranch {node} {locale} />
+            {/each}
+        </div>
+    {:else}
     {#each groups as group}
         <div>
             <div class="flex flex-row w-full items-center h-[3.75rem]">
@@ -142,4 +173,9 @@ onMount(async () => {
             {/each}
         </div>
     {/each}
+    {/if}
 </div>
+
+<style>
+    button.active { background: var(--btn-regular-bg); color: var(--primary); }
+</style>

@@ -1,0 +1,38 @@
+---
+import type { SupportedLocale } from "@i18n/locale";
+import { type CategoryNode, categoryLabel } from "../../utils/category-utils";
+import { getCategoryUrl } from "../../utils/url-utils";
+
+interface Props {
+	node: CategoryNode;
+	locale: SupportedLocale;
+}
+const { node, locale } = Astro.props;
+---
+
+{node.children.length > 0 ? (
+    <details open class="category-branch">
+        <summary class="flex items-center gap-1 rounded-lg text-75 cursor-pointer">
+            <span class="category-arrow" aria-hidden="true">›</span>
+            <a href={getCategoryUrl(node.path, locale)} class="btn-plain flex min-w-0 flex-1 items-center justify-between gap-2 rounded-lg px-2 py-2">
+                <span class="truncate">{categoryLabel(node.name)}</span>
+                <span class="text-xs text-50">{node.count}</span>
+            </a>
+        </summary>
+        <div class="ml-3 border-l border-[var(--line-divider)] pl-2">
+            {node.children.map(child => <Astro.self node={child} locale={locale} />)}
+        </div>
+    </details>
+) : (
+    <a href={getCategoryUrl(node.path, locale)} class="btn-plain flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-75">
+        <span class="truncate">{categoryLabel(node.name)}</span>
+        <span class="text-xs text-50">{node.count}</span>
+    </a>
+)}
+
+<style>
+    summary { list-style: none; }
+    summary::-webkit-details-marker { display: none; }
+    .category-arrow { transition: transform .15s; }
+    details[open] > summary > .category-arrow { transform: rotate(90deg); }
+</style>
